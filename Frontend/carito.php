@@ -43,7 +43,7 @@ $total_general = 0; // Se inicializa en 0 para evitar errores
     <header class="main-header">
         <nav class="navbar">
             <div class="logo-area">
-                <a href="../index.php">
+                <a href="../index.html">
                     <img src="../assets/img/logos/logo de enpresa.png" alt="Logo LUVEN" class="site-logo">
                 </a>
             </div>
