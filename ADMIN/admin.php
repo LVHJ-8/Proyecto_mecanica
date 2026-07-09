@@ -58,7 +58,7 @@ try {
                 <li><a href="productos/CRUDProductos.php"><i class="fas fa-box"></i> Productos</a></li>
                 <li><a href="servisios/CRUDServicios.php"><i class="fas fa-tools"></i> Servicios</a></li>
                 <li><a href="citas/CRUDCitas.php"><i class="fas fa-calendar-alt"></i> Citas</a></li>
-                <li><a href="categorias/CRUDCategorias.php"><i class="fas fa-list"></i> Categorías</a></li>
+                <li><a href="categoria/CRUDCategorias.php"><i class="fas fa-list"></i> Categorías</a></li>
                 <li><a href="marcas/CRUDMarcas.php"><i class="fas fa-tag"></i> Marcas</a></li>
                 <li><a href="modelos_De_veiculos/CRUDModelos.php"><i class="fas fa-car"></i> Modelos</a></li>
                 <li><a href="trabajadores/CRUDTrabajadores.php"><i class="fas fa-user-tie"></i> Trabajadores</a></li>

@@ -31,7 +31,7 @@ try {
             <ul>
                 <li><a href="../admin.php"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
                 <li><a href="../productos/CRUDProductos.php"><i class="fas fa-box"></i> <span>Productos</span></a></li>
-                <li><a href="../servicios/CRUDServicios.php"><i class="fas fa-tools"></i> <span>Servicios</span></a></li>
+                <li><a href="../servisios/CRUDServicios.php"><i class="fas fa-tools"></i> <span>Servicios</span></a></li>
                 <li><a href="../citas/CRUDCitas.php"><i class="fas fa-calendar-alt"></i> <span>Citas</span></a></li>
                 <li class="active"><a href="../categoria/CRUDCategorias.php"><i class="fas fa-list"></i> <span>Categorías</span></a></li>
                 <li><a href="../marcas/CRUDMarcas.php"><i class="fas fa-tag"></i> <span>Marcas</span></a></li>
