@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="assets/img/logos/logo de enpresa.png" type="image/png">
+    <title>LUVEN Taller & Repuestos</title>
+    <link rel="stylesheet" href="assets/css/estilos.css">
+</head>
+<body>
+
+    <div class="top-bar">
+        <div class="top-bar-container">
+            <span class="contact-info">LUVEN Taller & Repuestos</span>
+            <div class="top-bar-links">
+                <a href="Frontend/login.php" class="top-link">Iniciar Sesión</a>
+                <span class="separator">|</span>
+                <a href="Frontend/registro.php" class="top-link">Registrarse</a>
+            </div>
+        </div>
+    </div>
+
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="logo-area">
+                <a href="index.php">
+                    <img src="assets/img/logos/logo de enpresa.png" alt="Logo Taller Mecánico" class="site-logo">
+                </a>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="Frontend/nosotros.html">QUIENES SOMOS</a></li>
+                <li><a href="Frontend/servisios.php">SERVICIOS</a></li>
+                <li><a href="Frontend/productos.php">TIENDA</a></li>
+                <li><a href="Frontend/contacto.html">CONTACTO</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <a href="Frontend/cita.php" class="btn-agendar-nav">AGENDAR CITA</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="hero-container">
+        <button class="slider-arrow prev-arrow" onclick="cambiarSlide(-1)" aria-label="Anterior">&#10094;</button>
+
+        <div class="hero-content">
+            <div class="hero-text-side">
+                <h1 class="hero-title">
+                    CONOCE <br>
+                    <span class="highlight-red">NUESTROS</span> <br>
+                    PRODUCTOS
+                </h1>
+                <div class="hero-badge">
+                    <span class="badge-text">Garantía y Calidad</span>
+                </div>
+            </div>
+
+            <div class="hero-image-side">
+                <div class="diagonal-bg"></div>
+                
+                <div class="slide active">
+                    <img src="assets/img/logos/mecanico.jfif" alt="Repuestos 1" class="floating-image">
+                </div>
+                <div class="slide">
+                    <img src="assets/img/logos/enbrage.jfif" alt="Repuestos 2" class="floating-image">
+                </div>
+                <div class="slide">
+                    <img src="assets/img/logos/llaves.jfif" alt="Repuestos 3" class="floating-image">
+                </div>
+                <div class="slide">
+                    <img src="assets/img/logos/motor.jfif" alt="Repuestos 4" class="floating-image">
+                </div>
+                <div class="slide">
+                    <img src="assets/img/logos/repuestos.jfif" alt="Repuestos 5" class="floating-image">
+                </div>
+            </div>
+        </div>
+
+        <button class="slider-arrow next-arrow" onclick="cambiarSlide(1)" aria-label="Siguiente">&#10095;</button>
+        
+        <a href="https://wa.me/51906969275" class="whatsapp-btn" target="_blank" rel="noopener noreferrer">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+        </a>
+    </main>
+    
+    <footer class="main-footer">
+        <p>&copy; 2026 LUVEN Taller & Repuestos. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        let slideIndex = 0; 
+        const slides = document.querySelectorAll('.slide');
+        
+        // Cambio automático configurado exactamente a 15 segundos
+        const tiempoCambio = 15000; 
+        let autoPlay = setInterval(autoSlide, tiempoCambio);
+
+        function mostrarSlide(index) {
+            if (index >= slides.length) { 
+                slideIndex = 0; 
+            }
+            if (index < 0) { 
+                slideIndex = slides.length - 1; 
+            }
+
+            // Oculta todas las imágenes
+            slides.forEach(slide => slide.classList.remove('active'));
+            
+            // Muestra únicamente la imagen actual
+            slides[slideIndex].classList.add('active');
+        }
+
+        // Control de clics manuales en las flechas
+        function cambiarSlide(direccion) {
+            reiniciarTemporizador(); 
+            slideIndex += direccion;
+            mostrarSlide(slideIndex);
+        }
+
+        function autoSlide() {
+            slideIndex++;
+            mostrarSlide(slideIndex);
+        }
+
+        function reiniciarTemporizador() {
+            clearInterval(autoPlay);
+            autoPlay = setInterval(autoSlide, tiempoCambio);
+        }
+    </script>
+
+</body>
+</html>

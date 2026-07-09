@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../assets/img/logos/logo de enpresa.png" type="image/png">
+    <title>LUVEN Taller & Repuestos | Contacto</title>
+    <link rel="stylesheet" href="../assets/css/estilos.css">
+</head>
+<body>
+
+    <div class="top-bar">
+        <div class="top-bar-container">
+            <span class="contact-info">LUVEN Taller & Repuestos</span>
+            <div class="top-bar-links">
+                <a href="login.php" class="top-link">Iniciar Sesión</a>
+                <span class="separator">|</span>
+                <a href="registro.php" class="top-link">Registrarse</a>
+            </div>
+        </div>
+    </div>
+
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="logo-area">
+                <a href="../index.html">
+                    <img src="../assets/img/logos/logo de enpresa.png" alt="Logo Taller Mecánico" class="site-logo">
+                </a>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="nosotros.html">QUIENES SOMOS</a></li>
+                <li><a href="servisios.php">SERVICIOS</a></li>
+                <li><a href="productos.php">TIENDA</a></li>
+                <li><a href="contacto.html">CONTACTO</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <a href="cita.php" class="btn-contactenos">AGENDAR CITA</a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="contacto-section">
+        <div class="contacto-header">
+            <h1>CONTACTO</h1>
+            <p>¿Tienes dudas, necesitas una cotización o requieres asistencia técnica? Estamos listos para ayudarte.</p>
+        </div>
+
+        <div class="contacto-container">
+            <!-- Columna Izquierda: Formulario de Mensajes -->
+            <div class="contacto-form-side">
+                <h3>Envíanos un mensaje</h3>
+                <form action="#" method="POST" class="form-contacto">
+                    <div class="form-group">
+                        <label for="nombre">Nombre Completo</label>
+                        <input type="text" id="nombre" name="nombre" placeholder="Ej. Juan Pérez" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="telefono">Teléfono / WhatsApp</label>
+                        <input type="tel" id="telefono" name="telefono" placeholder="Ej. 906969275" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="asunto">¿En qué podemos ayudarte?</label>
+                        <select id="asunto" name="asunto" required>
+                            <option value="" disabled selected>Selecciona una opción</option>
+                            <option value="cotizacion">Cotización de Repuestos</option>
+                            <option value="mecanica">Servicio Mecánico / Taller</option>
+                            <option value="reclamo">Soporte / Garantía</option>
+                            <option value="otro">Otro asunto</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="mensaje">Detalles de tu consulta (Indica modelo o año de tu auto si es necesario)</label>
+                        <textarea id="mensaje" name="mensaje" rows="5" placeholder="Escribe tu mensaje aquí..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-enviar-contacto">Enviar Mensaje</button>
+                </form>
+            </div>
+
+            <!-- Columna Derecha: Datos Directos y Horarios -->
+            <div class="contacto-info-side">
+                <h3>Información de Atención</h3>
+                
+                <div class="info-block">
+                    <div class="info-icon">📍</div>
+                    <div class="info-text">
+                        <h4>Nuestra Ubicación</h4>
+                        <p>Av. Principal Automotriz 123 (Frente al óvalo principal)</p>
+                    </div>
+                </div>
+
+                <div class="info-block">
+                    <div class="info-icon">📞</div>
+                    <div class="info-text">
+                        <h4>Central de Atención</h4>
+                        <p>906 969 275</p>
+                    </div>
+                </div>
+
+                <div class="info-block">
+                    <div class="info-icon">🕒</div>
+                    <div class="info-text">
+                        <h4>Horario del Taller</h4>
+                        <p>Lunes a Viernes: 8:00 AM - 6:00 PM</p>
+                        <p>Sábados: 8:00 AM - 1:00 PM</p>
+                        <p class="horario-nota">Domingos y Feriados: Cerrado por descanso técnico</p>
+                    </div>
+                </div>
+
+                <div class="info-action-block">
+                    <p>¿Prefieres una respuesta inmediata?</p>
+                    <a href="https://wa.me/51906969275" target="_blank" rel="noopener noreferrer" class="btn-whatsapp-directo">
+                        💬 Chatear por WhatsApp ahora
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="contacto-map-container">
+            <h3>Encuéntranos en el mapa</h3>
+            <div class="map-responsive">
+                <!-- Mapa oficial integrado para Av. de la Cultura 1504 -->
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15516.486280455483!2d-71.9575191!3d-13.5282575!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x916e7f4c5147d337%3A0x7cc30da8a7c297cb!2sAv.%20de%20la%20Cultura%201504%2C%20Cusco%2008002!5e0!3m2!1ses!2spe!4v1718000000000!5m2!1ses!2spe" 
+                    width="100%" 
+                    height="400" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <a href="https://wa.me/51906969275" class="whatsapp-btn" target="_blank" rel="noopener noreferrer">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+    </a>
+
+    <footer class="main-footer">
+        <p>&copy; 2026 LUVEN Taller & Repuestos. Todos los derechos reservados.</p>
+    </footer>
+
+</body>
+</html>

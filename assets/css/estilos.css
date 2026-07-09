@@ -1,0 +1,1912 @@
+/* Contenedor principal de la grilla de horarios */
+.horarios-grid-mecanica {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    margin-top: 15px;
+    padding: 10px;
+    background: #fdfdfd;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+}
+
+/* Estado base de cada bloque de hora */
+.bloque-hora {
+    padding: 12px 8px;
+    background-color: #ffffff;
+    border: 2px solid #3498db;
+    color: #3498db;
+    font-weight: 600;
+    text-align: center;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.bloque-hora:hover:not(:disabled) {
+    background-color: #3498db;
+    color: #ffffff;
+}
+
+/* Estado cuando el usuario hace clic y selecciona la hora */
+.bloque-hora.seleccionado {
+    background-color: #2ecc71 !important;
+    border-color: #2ecc71 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 6px rgba(46, 204, 113, 0.3);
+}
+
+/* Estado bloqueado/ocupado (Ya reservado por otro cliente) */
+.bloque-hora:disabled, .bloque-hora.ocupado {
+    background-color: #e74c3c !important;
+    border-color: #e74c3c !important;
+    color: #ffffff !important;
+    text-decoration: line-through;
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* CONFIGURACIÓN GENERAL E INSPIRACIÓN DE COLORES                    */
+:root {
+    --azul-oscuro: #0f1a3a;   
+    --rojo-potente: #d6001c;  
+    --blanco: #ffffff;
+    --gris-suave: #f4f6f9;
+}
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: var(--gris-suave);
+    overflow-x: hidden;
+}
+.top-bar {
+    background-color: #0d162d; 
+    color: #ffffff;
+    font-size: 0.85rem;
+    padding: 8px 20px;
+}
+.top-bar-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.top-link {
+    color: #ffffff;
+    text-decoration: none;
+}
+.separator { 
+    margin: 0 8px;
+    color: rgba(255,255,255,0.3); 
+}
+.main-header {
+    background-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    position: relative;
+    z-index: 100;
+}
+.navbar {
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+.site-logo { 
+    height: 55px;
+    width: auto; }
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+}
+.nav-links a {
+    color: #000000;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    transition: color 0.2s;
+}
+.nav-links a:hover { 
+    color: #d6001c; 
+}
+.btn-contactenos {
+    background-color: #0f1a3a;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.85rem;
+    padding: 10px 20px;
+    border-radius: 4px;
+    border: 2px solid #0f1a3a;
+    transition: all 0.3s;
+}
+.btn-contactenos:hover {
+    background-color: #d6001c;
+    border-color: #d6001c;
+}
+/* HERO BANNER (ESTRUCTURA HORIZONTAL RECTANGULAR)                  */
+.hero-container {
+    position: relative;
+    width: 100%;
+    height: 450px; /* Altura fija horizontal perfecta para pantallas de PC */
+    background-color: var(--azul-oscuro);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+.hero-content {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+}
+.hero-text-side {
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 40px;
+    box-sizing: border-box;
+    z-index: 10;
+}
+.hero-title {
+    color: var(--blanco);
+    font-size: 3rem;
+    font-weight: 900;
+    line-height: 1.1;
+    text-transform: uppercase;
+    margin: 0 0 15px 0;
+}
+.highlight-red {
+    background-color: var(--rojo-potente);
+    color: var(--blanco);
+    padding: 2px 15px;
+    display: inline-block;
+    transform: skewX(-10deg); 
+}
+.hero-badge {
+    border: 2px solid var(--rojo-potente);
+    border-radius: 25px;
+    padding: 5px 15px;
+    width: fit-content;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+.badge-text {
+    color: var(--blanco);
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+.hero-image-side {
+    width: 55%;
+    height: 100%;
+    position: relative;
+}
+.diagonal-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 150%;
+    height: 100%;
+    background-color: #e9ecef;
+    transform: skewX(-20deg);
+    transform-origin: top left;
+    z-index: 1;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.3);
+}
+/* CONFIGURACIÓN DE DIAPOSITIVAS (SLIDES)*/
+.slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0; 
+    transition: opacity 0.6s ease-in-out; 
+    z-index: 2;
+}
+.slide.active {
+    opacity: 1;
+    z-index: 3;
+}
+.floating-image {
+    max-width: 80%;
+    max-height: 75%;
+    object-fit: contain;
+    filter: drop-shadow(0px 10px 12px rgba(0,0,0,0.4));
+    position: relative;
+    z-index: 4;
+}
+/* FLECHAS DE CONTROLES*/
+.slider-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.4);
+    color: var(--blanco);
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 15px 12px;
+    cursor: pointer;
+    z-index: 50;
+    font-size: 1.3rem;
+    border-radius: 4px;
+    transition: background 0.3s;
+}
+.slider-arrow:hover {
+    background: var(--rojo-potente);
+}
+.prev-arrow { 
+    left: 20px; 
+}
+.next-arrow { 
+    right: 20px; 
+}
+/* BOTÓN DE WHATSAPP FLOTANTE PEQUEÑO*/
+.whatsapp-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;  /* Tamaño reducido y discreto */
+    height: 50px; /* Tamaño reducido y discreto */
+    z-index: 999;
+    background-color: #25d366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
+    transition: transform 0.3s;
+}
+.whatsapp-btn:hover {
+    transform: scale(1.1);
+}
+.whatsapp-btn img {
+    width: 30px; /* Proporcional al botón */
+    height: 30px;
+}
+@media (max-width: 768px) {
+    .hero-container { height: auto; }
+    .hero-content { flex-direction: column; }
+    .hero-text-side { width: 100%; padding: 40px 20px; text-align: center; }
+    .hero-title { font-size: 2.2rem; }
+    .hero-badge { margin: 0 auto; }
+    .hero-image-side { display: none; }
+}
+.mision-vision-section {
+    padding: 60px 20px;
+    background-color: #f8f9fa; 
+}
+.mv-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    gap: 30px; 
+    justify-content: center;
+}
+.mv-card {
+    flex: 1;
+    background-color: #ffffff; 
+    padding: 35px 30px;
+    border-radius: 8px;
+    border: 2px solid #0f1a3a; 
+    box-shadow: 0 0 15px 10px rgba(255, 255, 255, 0.7); 
+    filter: drop-shadow(0px 4px 6px rgba(15, 26, 58, 0.04));
+    
+    transition: all 0.3s ease; 
+}
+.mv-card:hover {
+    transform: translateY(-5px);
+    border-color: #d6001c; 
+    box-shadow: 0 0 25px 15px rgba(255, 255, 255, 0.95);
+    filter: drop-shadow(0px 8px 12px rgba(15, 26, 58, 0.08));
+}
+.mv-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    display: inline-block;
+}
+.mv-card h3 {
+    font-size: 1.6rem;
+    color: #0f1a3a; 
+    margin: 0 0 15px 0;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.mv-card p {
+    color: #4a5568; 
+    line-height: 1.6;
+    font-size: 1rem;
+    margin: 0;
+}
+/* ESTILOS SECCIÓN QUIÉNES SOMOS (TRES COLUMNAS)*/
+.quienes-somos-section {
+    background: linear-gradient(to right, #e6f0fa, #ffffff);
+    padding: 50px 30px;
+    font-family: sans-serif;
+}
+.qs-header h1 {
+    font-size: 2.5rem;
+    color: #000000;
+    margin: 0 0 5px 0;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.qs-header p {
+    font-size: 1.1rem;
+    color: #333333;
+    margin-bottom: 35px;
+}
+.qs-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+.qs-content-cols {
+    flex: 3;
+    display: flex;
+    gap: 30px;
+}
+.qs-col {
+    flex: 1;
+}
+.qs-col h3 {
+    font-size: 1.1rem;
+    color: #000000;
+    margin: 0 0 15px 0;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+.qs-col p {
+    font-size: 0.95rem;
+    color: #333333;
+    line-height: 1.6;
+    margin: 0;
+}
+.valores-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.valores-list li {
+    font-size: 0.95rem;
+    color: #333333;
+    line-height: 1.6;
+    margin-bottom: 8px;
+}
+.qs-image-side {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    position: relative;
+}
+.motor-img {
+    max-width: 280px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 0 15px 10px rgba(255, 255, 255, 0.6); 
+    filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.1));
+}
+/* HOJA DE ESTILOS SEPARADA: SECCIÓN DE CONTACTO*/
+.contacto-section {
+    background-color: #f8f9fa;
+    padding: 60px 20px;
+    font-family: sans-serif;
+}
+.contacto-header {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 45px auto;
+}
+.contacto-header h1 {
+    font-size: 2.5rem;
+    color: #0f1a3a; 
+    margin: 0 0 10px 0;
+    font-weight: bold;
+}
+.contacto-header p {
+    font-size: 1.1rem;
+    color: #555555;
+    line-height: 1.5;
+}
+.contacto-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    gap: 40px;
+}
+.contacto-form-side {
+    flex: 1.3;
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border-top: 4px solid #0f1a3a;
+}
+.contacto-form-side h3, 
+.contacto-info-side h3 {
+    font-size: 1.5rem;
+    color: #0f1a3a;
+    margin: 0 0 25px 0;
+    font-weight: bold;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    display: block;
+    font-size: 0.95rem;
+    color: #333333;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+.form-group input, 
+.form-group select, 
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #333333;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+.form-group input:focus, 
+.form-group select:focus, 
+.form-group textarea:focus {
+    outline: none;
+    border-color: #0f1a3a;
+}
+.btn-enviar-contacto {
+    background-color: #d6001c;
+    color: #ffffff;
+    border: none;
+    padding: 14px 28px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+.btn-enviar-contacto:hover {
+    background-color: #b00014;
+}
+.contacto-info-side {
+    flex: 1;
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border-top: 4px solid #d6001c; /* Borde rojo decorativo */
+}
+.info-block {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+.info-icon {
+    font-size: 1.8rem;
+    line-height: 1;
+}
+.info-text h4 {
+    margin: 0 0 5px 0;
+    font-size: 1.1rem;
+    color: #0f1a3a;
+    font-weight: bold;
+}
+.info-text p {
+    margin: 0 0 4px 0;
+    color: #555555;
+    font-size: 0.98rem;
+    line-height: 1.4;
+}
+.horario-nota {
+    font-style: italic;
+    color: #999999 !important;
+    font-size: 0.9rem !important;
+}
+.info-action-block {
+    margin-top: 35px;
+    border-top: 1px dashed #dddddd;
+    padding-top: 25px;
+    text-align: center;
+}
+.info-action-block p {
+    color: #333333;
+    font-size: 0.95rem;
+    margin-bottom: 15px;
+}
+.btn-whatsapp-directo {
+    display: inline-block;
+    background-color: #25d366; /* Verde Oficial WhatsApp */
+    color: #ffffff;
+    text-decoration: none;
+    padding: 12px 20px;
+    font-weight: bold;
+    border-radius: 5px;
+    font-size: 0.95rem;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+.btn-whatsapp-directo:hover {
+    background-color: #1ebd59;
+    transform: scale(1.02);
+}
+.contacto-map-container {
+    max-width: 1200px;
+    margin: 50px auto 0 auto;
+}
+.contacto-map-container h3 {
+    font-size: 1.5rem;
+    color: #0f1a3a;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+.map-responsive {
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: 2px solid #ffffff;
+}
+/* RESPONSIVE DESIGN (MÓVILES)*/
+@media (max-width: 768px) {
+    .contacto-container {
+        flex-direction: column;
+        gap: 30px;
+    }
+    .contacto-form-side, .contacto-info-side {
+        padding: 25px;
+    }
+}
+/* INTEGRACIÓN: SECCIÓN DE TARJETAS DINÁMICAS (ABAJO DEL SLIDER)    */
+.servicios-publico-section {
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 0 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.servicios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 30px;
+}
+.servicio-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.servicio-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+}
+.servicio-icon {
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+}
+.servicio-card h3 {
+    font-size: 1.3rem;
+    color: #0f1a3a; 
+    margin: 0 0 10px 0;
+    font-weight: 600;
+}
+.servicio-card p {
+    color: #475569;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0 0 15px 0;
+    flex-grow: 1; 
+}
+.servicio-meta {
+    font-size: 0.85rem;
+    color: #64748b;
+    font-weight: 600;
+    margin-bottom: 20px;
+    background: #f1f5f9;
+    padding: 5px 12px;
+    border-radius: 6px;
+    display: inline-block;
+    width: fit-content;
+}
+.servicio-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 15px;
+}
+.servicio-precio {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #0f1a3a;
+}
+.btn-reservar-servicio {
+    background-color: #dc2626; 
+        color: #ffffff;
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+.btn-reservar-servicio:hover {
+    background-color: #b91c1c;
+}
+.no-servicios {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 0;
+    color: #94a3b8;
+    font-style: italic;
+    font-size: 1.05rem;
+}
+/* CONFIGURACIÓN VISUAL: INTERFAZ DE AUTENTICACIÓN (LOGIN/REGISTRO)  */
+.auth-body {
+    background-color: #0f1a3a; /* Azul oscuro corporativo */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    padding: 20px;
+}
+.auth-card {
+    background: #ffffff;
+    max-width: 450px;
+    width: 100%;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+.auth-header h2 {
+    color: #0f1a3a;
+    margin: 0 0 8px 0;
+    font-size: 1.8rem;
+    text-align: center;
+}
+.auth-header p {
+    color: #64748b;
+    font-size: 0.95rem;
+    text-align: center;
+    margin: 0 0 25px 0;
+    line-height: 1.4;
+}
+.alerta-error-box {
+    background-color: #fde8e8;
+    color: #9b1c1c;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    border: 1px solid #f8b4b4;
+    text-align: center;
+}
+.grupo-input {
+    margin-bottom: 18px;
+    display: flex;
+    flex-direction: column;
+}
+.grupo-input label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 6px;
+}
+.grupo-input input {
+    padding: 11px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: #0f1a3a;
+    transition: border-color 0.2s;
+}
+.grupo-input input:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+.grupo-input input.input-con-error {
+    border-color: #dc2626 !important;
+    background-color: #fff5f5;
+}
+.error-individual {
+    color: #dc2626;
+    font-size: 0.82rem;
+    font-weight: 600;
+    margin-top: 4px;
+    display: none;
+}
+.btn-auth-enviar {
+    background-color: #dc2626; /* Rojo destacado */
+    color: white;
+    border: none;
+    padding: 13px;
+    width: 100%;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 10px;
+}
+.btn-auth-enviar:hover {
+    background-color: #b91c1c;
+}
+.auth-footer {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 0.9rem;
+}
+.auth-footer p {
+    color: #64748b;
+    margin: 0;
+}
+.auth-footer a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 600;
+}
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+.btn-volver-inicio {
+    display: inline-block;
+    margin-top: 10px;
+    color: #64748b !important;
+    font-size: 0.85rem;
+    font-weight: 500 !important;
+}
+.auth-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra horizontalmente todo el contenido */
+    text-align: center;
+}
+.auth-logo {
+    max-width: 140px;    /* Controla el ancho máximo del logo */
+    height: auto;        /* Mantiene la proporción original de la imagen */
+    margin-bottom: 20px; /* Separa el logo del título "Registrarse en LUVEN" */
+    object-fit: contain;
+}
+
+/* ==========================================================================
+   SECCIÓN: TIENDA PÚBLICA DE PRODUCTOS (LUVEN)
+   ========================================================================== */
+
+/* Contenedor Principal del Catálogo */
+.tienda-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+/* Banner Principal (Estilo eBay) */
+.hero-tienda {
+    background: linear-gradient(135deg, #1e3a8a, #0f172a); /* Paleta azulada del taller */
+    color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 15px rgba(30, 58, 138, 0.15);
+}
+
+.hero-content h1 {
+    font-size: 2.2rem;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+    color: #ffffff !important;
+}
+
+.hero-content p {
+    font-size: 1.1rem;
+    margin: 0;
+    opacity: 0.9;
+    color: #ffffff;
+}
+
+.hero-icon {
+    font-size: 4.5rem;
+    opacity: 0.2;
+    padding-right: 20px;
+}
+
+/* Título de la Sección de Tendencias */
+.seccion-titulo {
+    font-size: 1.6rem;
+    color: #1e3a8a;
+    margin-top: 0;
+    margin-bottom: 25px;
+    border-bottom: 3px solid #3b82f6; /* Línea de acento azul brillante */
+    padding-bottom: 8px;
+    display: inline-block;
+    font-weight: 600;
+}
+
+/* Rejilla de Distribución (Grid) */
+.productos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 25px;
+}
+
+/* Tarjeta de Producto Individual */
+.producto-card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e2e8f0;
+}
+
+.producto-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(30, 58, 138, 0.12);
+}
+
+/* Contenedor de la Imagen */
+.producto-imagen-wrapper {
+    width: 100%;
+    height: 220px;
+    background-color: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.producto-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+}
+
+.no-image-icon {
+    font-size: 3.5rem;
+    color: #cbd5e1;
+}
+
+/* Etiqueta Flotante de Stock Crítico */
+.badge-stock {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #ef4444; /* Rojo de advertencia */
+    color: #ffffff;
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border-radius: 4px;
+    z-index: 2;
+}
+
+/* Información del Producto (Cuerpo de la tarjeta) */
+.producto-info {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+/* Título del Producto con bloqueo de error para line-clamp */
+.producto-nombre {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 8px 0;
+    line-height: 1.4;
+    height: 44px; /* Mantiene la simetría visual de las tarjetas */
+    
+    /* Combinación correcta anti-errores para recortar texto */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
+
+/* Descripción del Producto con bloqueo de error para line-clamp */
+.producto-descripcion {
+    font-size: 0.88rem;
+    color: #64748b;
+    margin: 0 0 15px 0;
+    height: 36px;
+    
+    /* Combinación correcta anti-errores para recortar texto */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
+
+/* Fila de Precio y Botón */
+.producto-meta {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.producto-precio {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1e3a8a;
+}
+
+/* Botón "Ver" (Estilo Azul del Taller) */
+.btn-detalles {
+    background-color: #3b82f6;
+    color: #ffffff !important;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-detalles:hover {
+    background-color: #1d4ed8;
+}
+
+/* Estado alternativo: Tienda vacía sin repuestos registrados */
+.tienda-vacia {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+/* ==========================================================================
+   BARRA DE BÚSQUEDA HORIZONTAL (ESTILO NATIVO EBAY)
+   ========================================================================== */
+
+.ebay-search-container {
+    background-color: #ffffff;
+    padding: 15px 0;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.ebay-search-form {
+    display: flex;
+    align-items: center;
+    gap: 0; /* Conexión visual limpia entre inputs */
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Input de texto */
+.search-input-wrapper {
+    position: relative;
+    flex-grow: 1;
+}
+
+.search-icon-inside {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 1.1rem;
+}
+
+.search-input-wrapper input {
+    width: 100%;
+    padding: 12px 12px 12px 45px;
+    font-size: 1rem;
+    border: 2px solid #1e293b;
+    border-right: none;
+    border-radius: 24px 0 0 24px; /* Bordes redondeados esquinas izquierdas */
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+/* Selector de Categorías */
+.search-select-wrapper {
+    min-width: 200px;
+}
+
+.search-select-wrapper select {
+    width: 100%;
+    padding: 12px 30px 12px 15px;
+    font-size: 0.95rem;
+    border: 2px solid #1e293b;
+    border-right: none;
+    background-color: #f8fafc;
+    outline: none;
+    cursor: pointer;
+    height: 49px; /* Alineación perfecta con el input */
+    box-sizing: border-box;
+    appearance: none; /* Eliminar flecha nativa */
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%231e293b' viewBox='0 0 16 16'><path d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: calc(100% - 15px) center;
+}
+
+/* Botón Buscar estilo eBay azul brillante */
+.btn-ebay-search {
+    background-color: #3b82f6;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 0 35px;
+    border: 2px solid #3b82f6;
+    border-radius: 0 24px 24px 0; /* Bordes redondeados esquinas derechas */
+    cursor: pointer;
+    height: 49px;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.btn-ebay-search:hover {
+    background-color: #1d4ed8;
+    border-color: #1d4ed8;
+}
+
+/* ==========================================================================
+   SECCIÓN DE FILTRO POR MARCAS DE VEHÍCULOS (ESTILO CÍRCULOS EBAY)
+   ========================================================================== */
+
+.marcas-vehiculos-section {
+    margin-bottom: 45px;
+    background-color: #ffffff;
+    padding: 25px 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e2e8f0;
+}
+
+.tienda-subtitulo {
+    font-size: 1.4rem;
+    color: #1e293b;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+/* Contenedor horizontal adaptable */
+.marcas-grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    overflow-x: auto; /* Permite scroll horizontal si son muchas marcas en celular */
+    padding-bottom: 10px;
+}
+
+/* Ocultar barra de scroll estéticamente en navegadores */
+.marcas-grid::-webkit-scrollbar {
+    height: 5px;
+}
+.marcas-grid::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+/* Elemento Marca individual */
+.marca-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    min-width: 110px;
+    text-align: center;
+    group: hover;
+}
+
+/* Círculo perfecto estilo eBay */
+.marca-circulo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #f8fafc; /* Fondo gris claro suave */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e2e8f0;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+    overflow: hidden;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+/* Logo interno */
+.marca-logo {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: grayscale(20%); /* Efecto elegante */
+    transition: filter 0.2s ease;
+}
+
+/* Nombre de la marca debajo del círculo */
+.marca-nombre {
+    margin-top: 10px;
+    font-size: 0.95rem;
+    color: #1e293b;
+    font-weight: 600;
+    transition: color 0.2s ease, border-bottom 0.2s ease;
+    border-bottom: 2px solid transparent;
+    padding-bottom: 2px;
+}
+
+/* ==========================================================================
+EFECTOS HOVER (COMPORTAMIENTO NATIVO EBAY)
+========================================================================== */
+
+/* Cuando pasas el mouse por encima de la marca */
+.marca-item:hover .marca-circulo {
+    transform: scale(1.06); /* Sutil empuje hacia arriba */
+    box-shadow: 0 6px 16px rgba(30, 58, 138, 0.08);
+    border-color: #3b82f6; /* Tu color azul secundario de acento */
+}
+
+.marca-item:hover .marca-logo {
+    filter: grayscale(0%); /* Color total de la marca */
+}
+
+.marca-item:hover .marca-nombre {
+    color: #1e3a8a; /* Tu color azul principal */
+    border-bottom: 2px solid #1e3a8a; /* Línea de enfoque de eBay */
+}
+
+/* ==========================================================================
+cita 
+========================================================================== */
+
+.cita-container{
+    width:100%;
+    max-width:1050px;
+    background:#fff;
+    margin:40px auto;
+    padding:35px;
+    border-radius:12px;
+    box-shadow:0 4px 6px rgba(0,0,0,.1);
+    box-sizing:border-box;
+}
+
+.cita-header{
+    text-align:center;
+    margin-bottom:35px;
+}
+
+.cita-etiqueta{
+    color:#e11d48;
+    font-size:1.1rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    margin-bottom:6px;
+}
+
+.cita-titulo{
+    font-size:2.4rem;
+    font-weight:800;
+    color:#0f172a;
+    margin:0;
+}
+
+/* FORMULARIO */
+
+.cita-formulario{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:40px;
+    align-items:flex-start;
+}
+
+.cita-columna-datos,
+.cita-columna-horario{
+    display:flex;
+    flex-direction:column;
+}
+
+/* TARJETAS */
+
+.cita-seccion,
+.cita-agenda{
+    background:#f8fafc;
+    padding:22px;
+    border-radius:8px;
+    border:1px solid #e2e8f0;
+    margin-bottom:20px;
+}
+
+.cita-subtitulo{
+    color:#0f172a;
+    font-size:1.05rem;
+    font-weight:700;
+    margin:0 0 18px;
+    border-bottom:2px solid #1e3a8a;
+    padding-bottom:5px;
+}
+
+.cita-label-principal{
+    color:#1e3a8a;
+    font-size:1rem;
+    font-weight:700;
+    display:block;
+    margin-bottom:15px;
+}
+
+/* CAMPOS */
+
+.cita-campo{
+    margin-bottom:16px;
+    display:flex;
+    flex-direction:column;
+}
+
+.cita-campo label{
+    margin-bottom:6px;
+    color:#475569;
+    font-size:.9rem;
+    font-weight:600;
+}
+
+.cita-campo input,
+.cita-fecha input{
+    width:100%;
+    padding:12px 14px;
+    border:1px solid #cbd5e1;
+    border-radius:6px;
+    font-size:.95rem;
+    box-sizing:border-box;
+    outline:none;
+    transition:.2s;
+}
+
+.cita-campo input:focus,
+.cita-fecha input:focus{
+    border-color:#1e3a8a;
+    box-shadow:0 0 0 3px rgba(30,58,138,.15);
+}
+
+/* HORARIOS */
+
+.cita-horas-container{
+    margin-top:25px;
+}
+
+.cita-lista-horas{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.cita-btn-hora{
+    background:#fff;
+    border:2px solid #e2e8f0;
+    border-radius:8px;
+    padding:14px 20px;
+    font-size:1rem;
+    font-weight:600;
+    color:#1e293b;
+    cursor:pointer;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    transition:.2s;
+}
+
+.cita-btn-hora:hover{
+    border-color:#1e3a8a;
+}
+
+.cita-btn-hora.seleccionada{
+    background:#1e3a8a;
+    border-color:#1e3a8a;
+    color:#fff;
+}
+
+.cita-estado-hora{
+    font-size:.85rem;
+    font-weight:700;
+    padding:4px 12px;
+    border-radius:20px;
+}
+
+.cita-estado-disponible{
+    background:#dcfce7;
+    color:#16a34a;
+}
+
+/* BOTON */
+
+.cita-btn-reservar{
+    width:100%;
+    background:#e11d48;
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    padding:16px;
+    font-size:1.1rem;
+    font-weight:700;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.cita-btn-reservar:hover{
+    background:#be123c;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+
+    .cita-formulario{
+        grid-template-columns:1fr;
+    }
+
+    .cita-container{
+        padding:20px;
+    }
+
+    .cita-titulo{
+        font-size:2rem;
+    }
+}
+
+/* ==========================================================================
+ALERTA DE INICIO DE SESIÓN OBLIGATORIO
+========================================================================== */
+.alerta-autenticacion {
+    background-color: #fef2f2; /* Fondo rojo/rosado muy sutil */
+    border-left: 4px solid #e11d48; /* Línea gruesa del rojo de tu botón */
+    color: #991b1b; /* Texto marrón rojizo oscuro para que se lea bien */
+    padding: 15px 20px;
+    border-radius: 6px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.alerta-autenticacion i {
+    color: #e11d48; /* Icono en rojo encendido */
+    font-size: 1.2rem;
+}
+
+/* ==========================================================================
+   INTERFAZ DE CARRITO DE COMPRAS (ESTILO TEMU)
+   ========================================================================== */
+
+.carrito-main-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+    font-family: sans-serif;
+}
+
+/* Breadcrumbs */
+.carrito-breadcrumbs {
+    display: flex;
+    gap: 5px;
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 15px;
+}
+.carrito-breadcrumbs a {
+    color: #666;
+    text-decoration: none;
+}
+.carrito-breadcrumbs p {
+    font-weight: bold;
+    color: #222;
+}
+
+/* Banner de Envío */
+.carrito-banner-envio {
+    background-color: #fff7ed;
+    border: 1px solid #ffedd5;
+    padding: 12px 16px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #c2410c;
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+}
+
+/* Layout de dos columnas flex */
+.carrito-layout {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+.carrito-columna-productos {
+    flex: 2;
+}
+
+.carrito-columna-resumen {
+    flex: 1;
+    position: sticky;
+    top: 20px;
+}
+
+/* Estado de Carrito Vacío */
+.carrito-estado-vacio {
+    text-align: center;
+    padding: 60px 20px;
+    background: #fff;
+    border-radius: 8px;
+}
+
+.carrito-estado-vacio .icon-wrap {
+    font-size: 4rem;
+    color: #ccc;
+    margin-bottom: 15px;
+}
+
+.carrito-estado-vacio h3 {
+    font-size: 1.4rem;
+    color: #222;
+    margin-bottom: 8px;
+}
+
+.carrito-estado-vacio p {
+    color: #666;
+    margin-bottom: 25px;
+}
+
+/* Botonera interna */
+.carrito-vacio-botones {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Botones con estilo Temu */
+.btn-temu-naranja {
+    background-color: #ff5000;
+    color: white;
+    padding: 12px 40px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: background 0.2s;
+    display: inline-block;
+}
+
+.btn-temu-naranja:hover {
+    background-color: #e04600;
+}
+
+.btn-temu-blanco {
+    background-color: #fff;
+    color: #222;
+    padding: 11px 40px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    transition: background 0.2s;
+    display: inline-block;
+}
+
+.btn-temu-blanco:hover {
+    background-color: #f5f5f5;
+}
+
+/* Tarjeta del Resumen lateral */
+.carrito-resumen-card {
+    background: #fff;
+    padding: 24px;
+    border-radius: 8px;
+}
+
+.carrito-resumen-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 20px;
+    color: #222;
+}
+
+.resumen-fila-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.3rem;
+    margin-bottom: 5px;
+    color: #222;
+}
+
+.resumen-nota {
+    font-size: 0.85rem;
+    color: #777;
+    margin-bottom: 20px;
+}
+
+/* Botón de hacer pedido principal */
+.btn-temu-orden {
+    width: 100%;
+    background-color: #ff5000;
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.btn-temu-orden:disabled {
+    background-color: #ffb399;
+    cursor: not-allowed;
+}
+
+/* Bloque de confianza inferior */
+.carrito-confianza-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.confianza-item {
+    display: flex;
+    gap: 10px;
+    font-size: 0.88rem;
+    line-height: 1.4;
+    color: #444;
+}
+
+.confianza-item i {
+    font-size: 1.1rem;
+    margin-top: 2px;
+}
+
+.text-verde {
+    color: #16a34a;
+}
+
+/* Responsivo para Celulares */
+@media (max-width: 768px) {
+    .carrito-layout {
+        flex-direction: column;
+    }
+    .carrito-columna-resumen {
+        width: 100%;
+        position: static;
+    }
+}
+
+/* Contenedor Principal */
+.marca-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Encabezado */
+.marca-header-inline {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 0;
+    border-bottom: 2px solid #f1f5f9;
+    margin-bottom: 30px;
+}
+
+.marca-logo-hd {
+    height: 60px;
+    object-fit: contain;
+}
+
+.marca-texto-header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: #0f172a;
+}
+
+.marca-texto-header p {
+    margin: 5px 0 0 0;
+    color: #64748b;
+}
+
+.seccion-subtitulo {
+    font-size: 1.25rem;
+    margin-bottom: 15px;
+    color: #1e293b;
+}
+
+/* ============================================================================
+   GRID DE MODELOS DE VEHÍCULOS (Inspirado en la imagen de referencia)
+   ============================================================================ */
+.vehiculos-modelos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+    margin-bottom: 45px;
+}
+
+.modelo-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.modelo-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    border-color: #cbd5e1;
+}
+
+.modelo-img-wrapper {
+    width: 100%;
+    height: 160px;
+    background: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.modelo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.modelo-footer {
+    padding: 12px 15px;
+    background: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #f1f5f9;
+}
+
+.modelo-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+.modelo-badge {
+    font-size: 0.75rem;
+    background: #eff6ff;
+    color: #2563eb;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.modelo-badge i {
+    font-size: 0.7rem;
+    margin-left: 2px;
+}
+
+/* ============================================================================
+   CONTROLADORES DEL CATÁLOGO DE REPUESTOS BELOW
+   ============================================================================ */
+.catalogo-filtro-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 25px;
+}
+
+.catalogo-filtro-header h2 {
+    font-size: 1.3rem;
+    margin: 0;
+    color: #0f172a;
+}
+
+.btn-restaurar-modelos {
+    color: #2563eb;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* Mensajes de aviso / Vacíos */
+.txt-vacio {
+    color: #64748b;
+    grid-column: 1 / -1;
+    font-style: italic;
+}
+
+.txt-vacio-productos {
+    color: #64748b;
+    padding: 20px 0;
+    font-style: italic;
+}
+
+/* ==========================================================================
+   NUEVA SECCIÓN: BARRA LATERAL DE CATEGORÍAS Y LAYOUT
+   ========================================================================== */
+
+.tienda-layout-grid {
+    display: flex;
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.sidebar-categorias {
+    width: 250px;
+    flex-shrink: 0;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 20px;
+    height: fit-content;
+}
+
+.sidebar-categorias h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    color: #0f172a;
+    border-bottom: 2px solid #f1f5f9;
+    padding-bottom: 8px;
+}
+
+.lista-cat-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.lista-cat-links li {
+    margin-bottom: 6px;
+}
+
+.lista-cat-links a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    color: #475569;
+    text-decoration: none;
+    font-size: 0.95rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.lista-cat-links a:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+.lista-cat-links a.activa {
+    background: #eff6ff;
+    color: #2563eb;
+    font-weight: 600;
+}
+
+.main-productos-container {
+    flex-grow: 1;
+}
+
+/* Adaptabilidad para Dispositivos Móviles */
+@media (max-width: 768px) {
+    .tienda-layout-grid {
+        flex-direction: column;
+    }
+    .sidebar-categorias {
+        width: 100%;
+    }
+}
+
+/* ==========================================================================
+   INTERFAZ DE HORARIOS (CRUD DINÁMICO)
+   ========================================================================== */
+
+.horarios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.horario-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 8px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    user-select: none;
+}
+
+.horario-card i {
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+}
+
+.horario-card small {
+    font-size: 0.75rem;
+    margin-top: 2px;
+    font-weight: 500;
+}
+
+/* Estado: DISPONIBLE (Verde) */
+.horario-card.disponible {
+    background-color: #f0fdf4;
+    color: #166534;
+    border-color: #bbf7d0;
+    cursor: pointer;
+}
+
+.horario-card.disponible:hover {
+    background-color: #dcfce7;
+    border-color: #86efac;
+    transform: translateY(-2px);
+}
+
+/* Estado: SELECCIONADO (Azul destacado al hacer clic) */
+.horario-card.disponible.seleccionado {
+    background-color: #eff6ff;
+    color: #1e40af;
+    border-color: #bfdbfe;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+/* Estado: OCUPADO (Rojo) */
+.horario-card.ocupado {
+    background-color: #fef2f2;
+    color: #991b1b;
+    border-color: #fecaca;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
