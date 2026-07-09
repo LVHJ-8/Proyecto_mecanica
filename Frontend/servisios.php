@@ -127,9 +127,6 @@ try {
                         <h3><?php echo htmlspecialchars($servicio['nombre']); ?></h3>
                         <p><?php echo htmlspecialchars($servicio['descripcion'] ?? 'Mantenimiento preventivo general.'); ?></p>
                         
-                        <div class="servicio-meta">
-                            <span>⏱️ <?php echo htmlspecialchars($servicio['duracion_minutos']); ?> min</span>
-                        </div>
                         
                         <div class="servicio-footer">
                             <span class="servicio-precio">S/ <?php echo number_format($servicio['precio'], 2); ?></span>
